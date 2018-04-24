@@ -36,7 +36,9 @@ p <- ggplot(employWide , aes(x = (mean_salary) , y = log10(abs(salary_gain*100))
   scale_x_continuous(name = "Average income" , breaks = c(50,100,150,200)*1000 , labels = paste(c(50,100,150,200),"K")) 
 p
 
-
+pdf("tidytuesday_0424.pdf")
+p
+dev.off()
 
 
 
