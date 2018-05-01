@@ -22,18 +22,18 @@ p <- ggplot(acs_max) +
   geom_point(aes(x = (-1) * IncomePerCap_last ,  y = 1:nrow(acs_max) )) +
   scale_colour_gradient2(low = "blue",mid="grey",high = "red" ,name="Percent black",midpoint=12.3) +
   theme_classic() + 
-  theme(axis.ticks.y = element_blank() , axis.text.y = element_blank() , axis.title.y = element_blank()) +
-  ggtitle("Income of highest- and lowest- earning counties") +
-  scale_x_continuous("Household Income (K USD)", breaks = c(-50000,0,50000,100000) , labels = c(50,0,50,100)) +
+  theme(axis.ticks.y = element_blank() , axis.text.y = element_blank() , 
+        axis.title.y = element_blank() , 
+        legend.position = c(1,.01) , legend.justification = c("right","bottom")) +
+  ggtitle("Income of highest- and lowest- earning counties per state") +
+  scale_x_continuous("Household Income (K USD)", breaks = c(-50000,0,50000,100000) ,
+                     labels = c(50,0,50,100) , expand = c(0.15, 0)) +
   geom_vline(xintercept = 0)+
-  # geom_text(aes(x = -1 * Income_last , y = seq(1,nrow(acs_max),2) , label = State) , 
-  #           data = slice(acs_max,seq(1,nrow(acs_max),2)) , size= 3 , hjust = 1) + 
-  # geom_text(aes(x = Income_first , y = seq(2,nrow(acs_max),2) , label = State)  , 
-  #           data = slice(acs_max,seq(2,nrow(acs_max),2)) ,  hjust = 0 , size = 3) +
   geom_text(aes(x = Income_first+3000 , y = seq(1,nrow(acs_max),1) , label = State) , 
             size= 3 ,hjust = 0) +
-  geom_text(aes(x = -3000 , y = 54 , label = c("Lowest earning")) , hjust = 1) + 
-  geom_text(aes(x = 3000 , y = 54 , label = c("Highest earning")) , hjust = 0)  
-  p
+  geom_text(aes(x = -3000 , y = 54 , label = c("Lowest earning county")) , hjust = 1) + 
+  geom_text(aes(x = 3000 , y = 54 , label = c("Highest earning county")) , hjust = 0) 
+
+p
 
 
