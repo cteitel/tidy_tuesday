@@ -1,6 +1,7 @@
 library(tidyverse)
 library(lubridate)
 library(RColorBrewer)
+library(gridExtra)
 
 bikeRaw <- read_csv("week10_biketown.csv")
 
@@ -37,20 +38,29 @@ p <- ggplot(dateSummary , aes(x = StartDate , y = count)) +
                        midpoint = 15) +
   ylab("Number of rides (per day)") + xlab("Date") +
   scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") +
-  geom_col(aes(x = StartDate , y = -1 * precip*1000) , color = rgb(.2,.3,1)) +
-  scale_y_continuous(breaks = seq(0,3000,1000),
-    sec.axis = sec_axis(~ . / (-1000) ,name = "Precipitation (in)",
-           breaks = seq(0,2.2,.5)))+
-  geom_line(y=0) +
-  theme(legend.position = c(0.05,1) , legend.justification = c("left","top") ,
+  # geom_col(aes(x = StartDate , y = -1 * precip*1000) , color = rgb(.2,.3,1)) +
+  # scale_y_continuous(breaks = seq(0,3000,1000),
+  #   sec.axis = sec_axis(~ . / (-1000) ,name = "Precipitation (in)",
+  #          breaks = seq(0,2.2,.5)))+
+  # geom_line(y=0) +
+  theme(legend.position = c(0.95,0.95) , legend.justification = c("right","top") ,
         legend.direction = "horizontal" , legend.title=element_text(size=10),
         legend.text=element_text(size=8),
         plot.title = element_text(hjust = 0.5,size = 20,face="bold"),
-        legend.box.background = element_rect(color = "black"),
-        axis.text.y.right = element_text(color = rgb(.2,.3,1)),
-        axis.text.y = element_text(color = brewer.pal(8,"PiYG")[1])) +
+        #legend.box.background = element_rect(color = "black"),
+        #axis.text.y = element_text(color = brewer.pal(8,"PiYG")[1]),
+        axis.text.y.right = element_text(color = rgb(.2,.3,1))) +
   ggtitle("Bike when it's dry!")
+
+
+
+p2 <- ggplot(dateSummary , aes(StartDate , y = precip))+
+  geom_col( color = rgb(.2,.3,1)) +
+  theme_classic(base_size = 14) +
+  ylab("Daily precipitation (in)") + xlab("Date")+
+  scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") 
   
-p
+  
+grid.arrange(p,p2,nrow = 2)
 
 
