@@ -17,23 +17,26 @@ acs_states <-
                funs(weighted.mean(.,w = TotalPop, na.rm = TRUE))) 
 acs_states <- mutate(acs_states , income_scale = Income / mean(acs_states$Income))
 
-#state centroids from: "https://raw.githubusercontent.com/benkeen/miscellaneous/master/d3collision/us-state-centroids.json"
-stateCenters <- read_json("us-state-centroids.json" , simplifyVector = T)
-#non-tidy data extraction
-coords <- do.call(rbind , stateCenters$features$geometry$coordinates )
-coords <- cbind.data.frame(coords , State = stateCenters$features$properties$name)
-names(coords) <- c("Long" , "Lat" , "State")
 
 #join all datasets
+#and add state abbreviations for labels
 exercise <- left_join(exercise , acs_states , by = c("state"="State")) %>%
   left_join(coords , by = c("state"="State"))
 
-plotdats = filter(exercise , !is.na(Income) & !state %in% c("Alaska","Hawaii"))
+exercise <- mutate(exercise , stateNum = match(state , state.name)) %>%
+  mutate(st = state.abb[stateNum] , div = state.division[stateNum])
+
+
+plotdats = filter(exercise , !is.na(Income))
+
 
 #plot
-p <- ggplot(plotdats , aes(x = Long , y = Lat)) +
-  geom_point(aes(fill = adults , size = Walk) , shape = 22 , color = "grey") +
+p <- ggplot(filter(plotdats , state != "District of Columbia") , 
+            aes(x = Walk , y = adults)) +
+  geom_point(aes(color = div) , size = 3) +
   theme_classic() +
-  scale_fill_continuous(low = "pink" , high = "black") +
-  scale_size(range=c(1,15))
+  #scale_color_continuous("Per capita \nincome", low = "red" , high = "black") +
+  geom_text(aes(label = st , color = div) , hjust = -.5) +
+  NULL
 p
+
