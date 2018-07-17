@@ -21,9 +21,7 @@ acs_states <- mutate(acs_states , income_scale = Income / mean(acs_states$Income
 #join all datasets
 #and add state abbreviations for labels
 exercise <- left_join(exercise , acs_states , by = c("state"="State")) %>%
-  left_join(coords , by = c("state"="State"))
-
-exercise <- mutate(exercise , stateNum = match(state , state.name)) %>%
+  mutate(stateNum = match(state , state.name)) %>%
   mutate(st = state.abb[stateNum] , div = state.division[stateNum])
 
 #group into fewer regions (remove "east" and "west" subdivisions)
